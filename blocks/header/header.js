@@ -8,6 +8,7 @@ function closeOnEscape(e) {
   if (e.code === 'Escape') {
     const nav = document.getElementById('nav');
     const navSections = nav.querySelector('.nav-sections');
+    if (!navSections) return;
     const navSectionExpanded = navSections.querySelector('[aria-expanded="true"]');
     if (navSectionExpanded && isDesktop.matches) {
       // eslint-disable-next-line no-use-before-define
@@ -25,6 +26,7 @@ function closeOnFocusLost(e) {
   const nav = e.currentTarget;
   if (!nav.contains(e.relatedTarget)) {
     const navSections = nav.querySelector('.nav-sections');
+    if (!navSections) return;
     const navSectionExpanded = navSections.querySelector('[aria-expanded="true"]');
     if (navSectionExpanded && isDesktop.matches) {
       // eslint-disable-next-line no-use-before-define
@@ -57,7 +59,10 @@ function focusNavSection() {
  * @param {Boolean} expanded Whether the element should be expanded or collapsed
  */
 function toggleAllNavSections(sections, expanded = false) {
-  sections.querySelectorAll('.nav-sections .default-content-wrapper > ul > li').forEach((section) => {
+  if (!sections) return;
+  const items = sections.querySelectorAll('.nav-sections .default-content-wrapper > ul > li');
+  const allItems = items.length ? items : sections.querySelectorAll('.nav-sections ul > li');
+  allItems.forEach((section) => {
     section.setAttribute('aria-expanded', expanded);
   });
 }
@@ -76,19 +81,21 @@ function toggleMenu(nav, navSections, forceExpanded = null) {
   toggleAllNavSections(navSections, expanded || isDesktop.matches ? 'false' : 'true');
   button.setAttribute('aria-label', expanded ? 'Open navigation' : 'Close navigation');
   // enable nav dropdown keyboard accessibility
-  const navDrops = navSections.querySelectorAll('.nav-drop');
-  if (isDesktop.matches) {
-    navDrops.forEach((drop) => {
-      if (!drop.hasAttribute('tabindex')) {
-        drop.setAttribute('tabindex', 0);
-        drop.addEventListener('focus', focusNavSection);
-      }
-    });
-  } else {
-    navDrops.forEach((drop) => {
-      drop.removeAttribute('tabindex');
-      drop.removeEventListener('focus', focusNavSection);
-    });
+  if (navSections) {
+    const navDrops = navSections.querySelectorAll('.nav-drop');
+    if (isDesktop.matches) {
+      navDrops.forEach((drop) => {
+        if (!drop.hasAttribute('tabindex')) {
+          drop.setAttribute('tabindex', 0);
+          drop.addEventListener('focus', focusNavSection);
+        }
+      });
+    } else {
+      navDrops.forEach((drop) => {
+        drop.removeAttribute('tabindex');
+        drop.removeEventListener('focus', focusNavSection);
+      });
+    }
   }
 
   // enable menu collapse on escape keypress
@@ -134,7 +141,17 @@ export default async function decorate(block) {
 
   const navSections = nav.querySelector('.nav-sections');
   if (navSections) {
-    navSections.querySelectorAll(':scope .default-content-wrapper > ul > li').forEach((navSection) => {
+    // Remove button classes from nav-sections links
+    navSections.querySelectorAll('.button').forEach((button) => {
+      button.className = '';
+      const buttonContainer = button.closest('.button-container');
+      if (buttonContainer) buttonContainer.className = '';
+    });
+
+    // Find nav items - support both with and without default-content-wrapper
+    const navItems = navSections.querySelectorAll(':scope .default-content-wrapper > ul > li');
+    const items = navItems.length ? navItems : navSections.querySelectorAll(':scope ul > li');
+    items.forEach((navSection) => {
       if (navSection.querySelector('ul')) navSection.classList.add('nav-drop');
       navSection.addEventListener('click', () => {
         if (isDesktop.matches) {

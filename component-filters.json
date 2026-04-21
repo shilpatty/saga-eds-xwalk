@@ -13,30 +13,43 @@
       "button",
       "title",
       "hero",
+      "hero-saga",
+      "hero-product",
       "cards",
+      "cards-campaign",
+      "cards-tiles",
+      "cards-articles",
       "columns",
+      "columns-trust",
       "fragment"
     ]
   },
   {
     "id": "cards",
-    "components": [
-      "card"
-    ]
+    "components": ["card"]
+  },
+  {
+    "id": "cards-campaign",
+    "components": ["cards-campaign-item"]
+  },
+  {
+    "id": "cards-tiles",
+    "components": ["cards-tiles-item"]
+  },
+  {
+    "id": "cards-articles",
+    "components": ["cards-articles-item"]
   },
   {
     "id": "columns",
-    "components": [
-      "column"
-    ]
+    "components": ["column"]
+  },
+  {
+    "id": "columns-trust",
+    "components": ["text", "image", "button", "title"]
   },
   {
     "id": "column",
-    "components": [
-      "text",
-      "image",
-      "button",
-      "title"
-    ]
+    "components": ["text", "image", "button", "title"]
   }
 ]

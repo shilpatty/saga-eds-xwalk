@@ -1,8 +1,8 @@
 {
   "mappings": [
-    "/content/aem-boilerplate/:/"
+    "/content/Saga/language-masters/en/:/"
   ],
   "includes": [
-    "/content/aem-boilerplate/"
+    "/content/Saga/language-masters/en/"
   ]
 }
