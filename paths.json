@@ -1,8 +1,8 @@
 {
   "mappings": [
-    "/content/Saga/language-masters/en/:/"
+    "/content/saga-eds/language-masters/en/:/"
   ],
   "includes": [
-    "/content/Saga/language-masters/en/"
+    "/content/saga-eds/language-masters/en/"
   ]
 }
